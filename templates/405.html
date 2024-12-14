@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>405 - Method Not Allowed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .status-container {
+            text-align: center;
+            padding: 50px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        .status-icon.error {
+            color: #ff0000;
+            font-size: 50px;
+        }
+        .status-title {
+            font-size: 2rem;
+            margin-top: 1rem;
+            color: #333;
+        }
+        .status-message {
+            font-size: 1.2rem;
+            margin: 1.5rem 0;
+        }
+        .action-buttons .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #007bff;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <div class="status-icon error">🚫</div>
+        <div class="status-title">405 - Method Not Allowed</div>
+        <div class="status-message">The method you used is not allowed for this route.</div>
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary">Go to Homepage</a>
+            <a href="/overview" class="btn btn-outline">Go to Overview</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   </head>
   <body>
     <nav class="navbar">
@@ -23,10 +25,9 @@
         <div class="filter-group">
           <label for="city">City</label>
           <select id="city">
-            <option value="nairobi">Nairobi</option>
-            <option value="mombasa">Mombasa</option>
-            <option value="kisumu">Kisumu</option>
-            <option value="nakuru">Nakuru</option>
+            <option value="kisumu-central">Kisumu Central</option>
+            <option value="kisumu-east">Kisumu East</option>
+            <option value="kisumu-west">Kisumu West</option>
           </select>
         </div>
         <div class="filter-group">
@@ -39,7 +40,7 @@
           </select>
         </div>
       </div>
-
+  
       <div class="charts-container">
         <div class="chart-card">
           <h3>Crime Types Distribution</h3>
@@ -53,144 +54,188 @@
           <h3>Time of Day Analysis</h3>
           <canvas id="timeOfDayChart"></canvas>
         </div>
+        <div class="chart-card">
+          <h3>Crime Intensity Heatmap</h3>
+          <div id="heatmap"></div>
+        </div>
       </div>
     </div>
-
+  
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
       // Sample data
       const crimeData = {
         types: {
-          labels: ["Theft", "Assault", "Burglary", "Fraud", "Vandalism"],
-          data: [35, 25, 20, 15, 5],
+          labels: ['Theft', 'Assault', 'Burglary', 'Fraud', 'Vandalism'],
+          data: [35, 25, 20, 15, 5]
         },
         trends: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-          data: [65, 59, 80, 81, 56, 55],
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          data: [65, 59, 80, 81, 56, 55]
         },
         timeOfDay: {
-          labels: ["Morning", "Afternoon", "Evening", "Night"],
-          data: [20, 35, 25, 20],
-        },
+          labels: ['Morning', 'Afternoon', 'Evening', 'Night'],
+          data: [20, 35, 25, 20]
+        }
       };
-
+  
       // Initialize charts
       const crimeTypesChart = new Chart(
-        document.getElementById("crimeTypesChart").getContext("2d"),
+        document.getElementById('crimeTypesChart').getContext('2d'),
         {
-          type: "doughnut",
+          type: 'doughnut',
           data: {
             labels: crimeData.types.labels,
-            datasets: [
-              {
-                data: crimeData.types.data,
-                backgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#4BC0C0",
-                  "#9966FF",
-                ],
-              },
-            ],
+            datasets: [{
+              data: crimeData.types.data,
+              backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#9966FF'
+              ]
+            }]
           },
           options: {
             responsive: true,
             plugins: {
               legend: {
-                position: "bottom",
-              },
-            },
-          },
+                position: 'bottom'
+              }
+            }
+          }
         }
       );
-
+  
       const trendChart = new Chart(
-        document.getElementById("trendChart").getContext("2d"),
+        document.getElementById('trendChart').getContext('2d'),
         {
-          type: "line",
+          type: 'line',
           data: {
             labels: crimeData.trends.labels,
-            datasets: [
-              {
-                label: "Number of Incidents",
-                data: crimeData.trends.data,
-                borderColor: "#36A2EB",
-                tension: 0.1,
-                fill: false,
-              },
-            ],
+            datasets: [{
+              label: 'Number of Incidents',
+              data: crimeData.trends.data,
+              borderColor: '#36A2EB',
+              tension: 0.1,
+              fill: false
+            }]
           },
           options: {
             responsive: true,
             scales: {
               y: {
-                beginAtZero: true,
-              },
-            },
-          },
+                beginAtZero: true
+              }
+            }
+          }
         }
       );
-
+  
       const timeOfDayChart = new Chart(
-        document.getElementById("timeOfDayChart").getContext("2d"),
+        document.getElementById('timeOfDayChart').getContext('2d'),
         {
-          type: "bar",
+          type: 'bar',
           data: {
             labels: crimeData.timeOfDay.labels,
-            datasets: [
-              {
-                label: "Incidents",
-                data: crimeData.timeOfDay.data,
-                backgroundColor: ["#2c3e50", "#3498db", "#e74c3c", "#2ecc71"],
-              },
-            ],
+            datasets: [{
+              label: 'Incidents',
+              data: crimeData.timeOfDay.data,
+              backgroundColor: [
+                '#2c3e50',
+                '#3498db',
+                '#e74c3c',
+                '#2ecc71'
+              ]
+            }]
           },
           options: {
             responsive: true,
             scales: {
               y: {
-                beginAtZero: true,
-              },
+                beginAtZero: true
+              }
             },
             plugins: {
               legend: {
-                display: false,
-              },
-            },
-          },
+                display: false
+              }
+            }
+          }
         }
       );
-
+  
+      // Initialize heatmap
+      const map = L.map('heatmap').setView([-0.0917, 34.7680], 12); // Kisumu coordinates
+  
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+  
+      // Add circles for different intensity levels
+      const locations = [
+        {
+          name: 'Kisumu Central',
+          coords: [-0.0917, 34.7680],
+          intensity: 'high',
+          color: '#ff0000',
+          radius: 1000
+        },
+        {
+          name: 'Kisumu East',
+          coords: [-0.0750, 34.8000],
+          intensity: 'medium',
+          color: '#ff8c00',
+          radius: 1000
+        },
+        {
+          name: 'Kisumu West',
+          coords: [-0.1000, 34.7400],
+          intensity: 'low',
+          color: '#ffff00',
+          radius: 1000
+        }
+      ];
+  
+      locations.forEach(location => {
+        L.circle(location.coords, {
+          color: location.color,
+          fillColor: location.color,
+          fillOpacity: 0.5,
+          radius: location.radius
+        }).addTo(map);
+  
+        L.marker(location.coords)
+          .bindPopup(`<b>${location.name}</b><br>Crime Intensity: ${location.intensity}`)
+          .addTo(map);
+      });
+  
+      // Ensure map fills container after load
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+  
       // Filter handling
       function updateCharts() {
-        const city = document.getElementById("city").value;
-        const timeRange = document.getElementById("dateRange").value;
-
-        // Here you would typically fetch new data based on the selected filters
-        // For now, we'll just simulate a data update
+        const city = document.getElementById('city').value;
+        const timeRange = document.getElementById('dateRange').value;
+        
         setTimeout(() => {
-          crimeTypesChart.data.datasets[0].data = crimeData.types.data.map(
-            (v) => v * Math.random() * 1.5
-          );
-          trendChart.data.datasets[0].data = crimeData.trends.data.map(
-            (v) => v * Math.random() * 1.5
-          );
-          timeOfDayChart.data.datasets[0].data = crimeData.timeOfDay.data.map(
-            (v) => v * Math.random() * 1.5
-          );
-
+          crimeTypesChart.data.datasets[0].data = crimeData.types.data.map(v => v * Math.random() * 1.5);
+          trendChart.data.datasets[0].data = crimeData.trends.data.map(v => v * Math.random() * 1.5);
+          timeOfDayChart.data.datasets[0].data = crimeData.timeOfDay.data.map(v => v * Math.random() * 1.5);
+          
           crimeTypesChart.update();
           trendChart.update();
           timeOfDayChart.update();
         }, 500);
       }
-
+  
       // Add event listeners to filters
-      document.getElementById("city").addEventListener("change", updateCharts);
-      document
-        .getElementById("dateRange")
-        .addEventListener("change", updateCharts);
+      document.getElementById('city').addEventListener('change', updateCharts);
+      document.getElementById('dateRange').addEventListener('change', updateCharts);
     </script>
   </body>
 </html>

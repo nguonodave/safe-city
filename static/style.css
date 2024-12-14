@@ -1,7 +1,7 @@
 :root {
   --primary: #2c3e50;
   --secondary: #3498db;
-  --accent: #3498db; /* Changed from #e74c3c to match theme */
+  --accent: #3498db;
   --light: #ecf0f1;
   --dark: #2c3e50;
 }
@@ -453,10 +453,21 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
   
+  .chart-card:last-child {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  
   .chart-card h3 {
     margin-bottom: 1rem;
     text-align: center;
     color: var(--primary);
+  }
+  
+  #heatmap {
+    height: 400px;
+    width: 100%;
+    border-radius: 8px;
   }
   
   @media (max-width: 768px) {

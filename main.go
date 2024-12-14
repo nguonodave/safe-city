@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"sync"
 
 	"safecity/vars"
 )
@@ -19,7 +21,43 @@ type IncidentReport struct {
 }
 
 // Reports storage (in-memory)
-var reports []IncidentReport
+var (
+	reports  []IncidentReport
+	mutex    sync.Mutex
+	dataFile = "reports.json"
+)
+
+// loadReports loads existing reports from the JSON file
+func loadReports() error {
+	// Check if file exists
+	if _, err := os.Stat(dataFile); os.IsNotExist(err) {
+		return nil // we will return nil because the file does not exist yet
+	}
+
+	// Read the file
+	data, err := os.ReadFile(dataFile)
+	if err != nil {
+		return err
+	}
+
+	// If file is empty, initialize empty reports slice
+	if len(data) == 0 {
+		reports = make([]IncidentReport, 0)
+		return nil
+	}
+
+	// Unmarshal JSON into reports slice
+	return json.Unmarshal(data, &reports)
+}
+
+// saveReports saves the reports to the JSON file
+func saveReports() error {
+    data, err := json.MarshalIndent(reports, "", "    ")
+    if err != nil {
+        return err
+    }
+    return os.WriteFile(dataFile, data, 0644)
+}
 
 func submitReport(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
@@ -36,6 +74,13 @@ func handleReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Parse form values
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
+		return
+	}
+
 	// Create an IncidentReport object from form data
 	report := IncidentReport{
 		IncidentType:   r.FormValue("incidentType"),
@@ -46,7 +91,11 @@ func handleReport(w http.ResponseWriter, r *http.Request) {
 		ContactEmail:   r.FormValue("contactEmail"),
 	}
 
-	reports = append(reports, report)
+	// Safely append to the slice and save to file using mutex
+    mutex.Lock()
+    reports = append(reports, report)
+    err = saveReports()
+    mutex.Unlock()
 
 	// Redirect to success page
 	http.Redirect(w, r, "/success", http.StatusSeeOther)
@@ -74,6 +123,11 @@ func getReports(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Initialize reports by loading from file
+    if err := loadReports(); err != nil {
+        log.Printf("Error loading reports: %v", err)
+    }
+
 	vars.AllTemplates, _ = vars.AllTemplates.ParseGlob(vars.TemplatesDir + "*.html")
 
 	http.HandleFunc("/submit-report", submitReport) // Render report submission

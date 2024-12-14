@@ -4,8 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank you</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>thanks</h1>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-links">
+                <a href="https://example.com/submit">Submit a Report</a>
+                <a href="https://example.com/safety">Safety Overview</a>
+                <a href="https://example.com/emergency">Emergency Contacts</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="status-container">
+        <svg class="status-icon success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        
+        <h1 class="status-title">Report Submitted Successfully</h1>
+        <p class="status-message">Thank you for helping keep our community safe. Your report has been received and will be reviewed by our team.</p>
+        
+        <div class="action-buttons">
+          <a href="https://example.com/submit" class="btn btn-primary">Submit Another Report</a>
+          <a href="https://example.com/safety" class="btn btn-outline">View Safety Overview</a>
+        </div>
+      </div>
+    
+      <script>
+        // Get URL parameters to check if this was an error page
+        const urlParams = new URLSearchParams(window.location.search);
+        const isError = urlParams.get('error') === 'true';
+        
+        if (isError) {
+          const statusIcon = document.querySelector('.status-icon');
+          const statusTitle = document.querySelector('.status-title');
+          const statusMessage = document.querySelector('.status-message');
+          
+          statusIcon.classList.remove('success');
+          statusIcon.classList.add('error');
+          statusIcon.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+          `;
+          
+          statusTitle.textContent = 'Error Submitting Report';
+          statusMessage.textContent = 'There was an error submitting your report. Please try again or contact support if the problem persists.';
+        }
+      </script>
 </body>
 </html>

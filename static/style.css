@@ -1,10 +1,10 @@
 :root {
-    --primary: #2c3e50;
-    --secondary: #3498db;
-    --accent: #e74c3c;
-    --light: #ecf0f1;
-    --dark: #2c3e50;
-  }
+  --primary: #2c3e50;
+  --secondary: #3498db;
+  --accent: #3498db; /* Changed from #e74c3c to match theme */
+  --light: #ecf0f1;
+  --dark: #2c3e50;
+}
   
   * {
     margin: 0;
@@ -225,4 +225,106 @@
     width: 64px;
     height: 64px;
     margin-bottom: 1rem;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .emergency-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .emergency-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .emergency-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .emergency-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .emergency-icon {
+    width: 40px;
+    height: 40px;
+    fill: var(--secondary);
+  }
+  
+  .contact-list {
+    list-style: none;
+  }
+  
+  .contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .contact-item:last-child {
+    border-bottom: none;
+  }
+  
+  .emergency-alert {
+    background: var(--secondary);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .copy-btn {
+    background: var(--secondary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .copy-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+    
+    .emergency-grid {
+      grid-template-columns: 1fr;
+    }
   }

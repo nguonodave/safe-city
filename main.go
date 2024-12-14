@@ -115,7 +115,11 @@ func handleReport(w http.ResponseWriter, r *http.Request) {
 	// Safely append to the slice and save to file using mutex
     mutex.Lock()
     reports = append(reports, report)
-    err = saveReports()
+    saveErr := saveReports()
+	if saveErr != nil {
+		http.Error(w, "Failed to save reports", http.StatusBadRequest)
+		return
+	}
     mutex.Unlock()
 
 	// Redirect to success page

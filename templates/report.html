@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Report - Safe City</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="nav-content">
+        <div class="nav-links">
+          <a href="/submit-report">Submit a Report</a>
+          <a href="/overview">Safety Overview</a>
+          <a href="/emergency-contacts">Emergency Contacts</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="report-container">
+      <div id="successMessage" class="success-message">
+        Report submitted successfully! Thank you for helping keep our community
+        safe.
+      </div>
+      <div id="errorMessage" class="error-message">
+        There was an error submitting your report. Please try again.
+      </div>
+
+      <h1>Submit a Report</h1>
+      <p style="margin: 1rem 0">
+        Please provide as much detail as possible. All reports are anonymous.
+      </p>
+
+      <form id="reportForm" action="/report" method="POST">
+        <div class="form-group">
+          <label>Incident Type <span class="required">*</span></label>
+          <select id="incidentType" name="incidentType" required>
+            <option value="">Select incident type</option>
+            <option value="theft">Theft</option>
+            <option value="vandalism">Vandalism</option>
+            <option value="suspicious">Suspicious Activity</option>
+            <option value="assault">Assault</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label
+            >Date and Time of Incident <span class="required">*</span></label
+          >
+          <input
+            type="datetime-local"
+            id="incidentDateTime"
+            name="dateTime"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Location <span class="required">*</span></label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            placeholder="Enter street address or description"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Incident Description <span class="required">*</span></label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Please provide a detailed description..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Additional Details</label>
+          <textarea
+            id="additionalInfo"
+            name="additionalInfo"
+            placeholder="Any other relevant information (suspects description, vehicle details, etc.)"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Contact Information (Optional)</label>
+          <input
+            type="email"
+            id="contactEmail"
+            name="contactEmail"
+            placeholder="Your email (if you wish to be contacted)"
+          />
+        </div>
+
+        <input type="submit" value="Submit Report" class="submit-btn" />
+      </form>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-content">
+        <div class="nav-links">
+          <a href="/submit-report">Submit a Report</a>
+          <a href="/overview">Safety Overview</a>
+          <a href="/emergency-contacts">Emergency Contacts</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1>Crime Awareness Dashboard</h1>
+      <div class="filters">
+        <div class="filter-group">
+          <label for="city">City</label>
+          <select id="city">
+            <option value="nairobi">Nairobi</option>
+            <option value="mombasa">Mombasa</option>
+            <option value="kisumu">Kisumu</option>
+            <option value="nakuru">Nakuru</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="dateRange">Time Period</label>
+          <select id="dateRange">
+            <option value="last7">Last 7 Days</option>
+            <option value="last30">Last 30 Days</option>
+            <option value="last90">Last 90 Days</option>
+            <option value="lastYear">Last Year</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3>Crime Types Distribution</h3>
+          <canvas id="crimeTypesChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Monthly Crime Trends</h3>
+          <canvas id="trendChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Time of Day Analysis</h3>
+          <canvas id="timeOfDayChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Sample data
+      const crimeData = {
+        types: {
+          labels: ["Theft", "Assault", "Burglary", "Fraud", "Vandalism"],
+          data: [35, 25, 20, 15, 5],
+        },
+        trends: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+          data: [65, 59, 80, 81, 56, 55],
+        },
+        timeOfDay: {
+          labels: ["Morning", "Afternoon", "Evening", "Night"],
+          data: [20, 35, 25, 20],
+        },
+      };
+
+      // Initialize charts
+      const crimeTypesChart = new Chart(
+        document.getElementById("crimeTypesChart").getContext("2d"),
+        {
+          type: "doughnut",
+          data: {
+            labels: crimeData.types.labels,
+            datasets: [
+              {
+                data: crimeData.types.data,
+                backgroundColor: [
+                  "#FF6384",
+                  "#36A2EB",
+                  "#FFCE56",
+                  "#4BC0C0",
+                  "#9966FF",
+                ],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+            },
+          },
+        }
+      );
+
+      const trendChart = new Chart(
+        document.getElementById("trendChart").getContext("2d"),
+        {
+          type: "line",
+          data: {
+            labels: crimeData.trends.labels,
+            datasets: [
+              {
+                label: "Number of Incidents",
+                data: crimeData.trends.data,
+                borderColor: "#36A2EB",
+                tension: 0.1,
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        }
+      );
+
+      const timeOfDayChart = new Chart(
+        document.getElementById("timeOfDayChart").getContext("2d"),
+        {
+          type: "bar",
+          data: {
+            labels: crimeData.timeOfDay.labels,
+            datasets: [
+              {
+                label: "Incidents",
+                data: crimeData.timeOfDay.data,
+                backgroundColor: ["#2c3e50", "#3498db", "#e74c3c", "#2ecc71"],
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          },
+        }
+      );
+
+      // Filter handling
+      function updateCharts() {
+        const city = document.getElementById("city").value;
+        const timeRange = document.getElementById("dateRange").value;
+
+        // Here you would typically fetch new data based on the selected filters
+        // For now, we'll just simulate a data update
+        setTimeout(() => {
+          crimeTypesChart.data.datasets[0].data = crimeData.types.data.map(
+            (v) => v * Math.random() * 1.5
+          );
+          trendChart.data.datasets[0].data = crimeData.trends.data.map(
+            (v) => v * Math.random() * 1.5
+          );
+          timeOfDayChart.data.datasets[0].data = crimeData.timeOfDay.data.map(
+            (v) => v * Math.random() * 1.5
+          );
+
+          crimeTypesChart.update();
+          trendChart.update();
+          timeOfDayChart.update();
+        }, 500);
+      }
+
+      // Add event listeners to filters
+      document.getElementById("city").addEventListener("change", updateCharts);
+      document
+        .getElementById("dateRange")
+        .addEventListener("change", updateCharts);
+    </script>
+  </body>
+</html>

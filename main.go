@@ -27,6 +27,15 @@ var (
 	dataFile = "reports.json"
 )
 
+func homePage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	vars.AllTemplates.ExecuteTemplate(w, "home.html", nil)
+}
+
 // loadReports loads existing reports from the JSON file
 func loadReports() error {
 	// Check if file exists
@@ -130,8 +139,9 @@ func main() {
 
 	vars.AllTemplates, _ = vars.AllTemplates.ParseGlob(vars.TemplatesDir + "*.html")
 
+	http.HandleFunc("/", homePage) // Render home page
 	http.HandleFunc("/submit-report", submitReport) // Render report submission
-	http.HandleFunc("/success", successReport)      // Render report submission
+	http.HandleFunc("/success", successReport)      // Render success report submission
 	http.HandleFunc("/report", handleReport)        // Handle form submissions
 	http.HandleFunc("/reports", getReports)         // Endpoint to fetch reports
 

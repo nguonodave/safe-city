@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe City</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="home-page">
+    <nav class="navbar">
+        <div class="nav-content">
+          <div class="nav-links">
+            <a href="https://example.com/submit">Submit a Report</a>
+            <a href="https://example.com/safety">Safety Overview</a>
+            <a href="https://example.com/emergency">Emergency Contacts</a>
+          </div>
+        </div>
+      </nav>
+
+    <section class="hero">
+        <svg class="security-icon" viewBox="0 0 24 24" fill="white">
+            <path
+                d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
+        </svg>
+        <div class="mission-statement">
+            Empowering residents to report and track neighborhood safety
+        </div>
+        <a class="cta-button" href="">Report an Incident</a>
+    </section>
+
+    <main class="main-content">
+        <div class="data-visualization">
+            <h2>Crime Statistics Overview</h2>
+            <canvas id="crimeChart"></canvas>
+        </div>
+
+        <div class="updates-feed">
+            <h2>Community Updates</h2>
+            <div id="updates"></div>
+        </div>
+    </main>
+
+    <footer class="privacy-notice">
+        <p>Your privacy matters. All reports are anonymous and data is securely encrypted.</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('crimeChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Reported Incidents',
+                    data: [12, 19, 8, 15, 10, 13],
+                    backgroundColor: '#3498db'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Simulate community updates
+        const updates = [
+            'Suspicious activity reported near Central Park - 2 hours ago',
+            'New street lights installed on Main Street - 5 hours ago',
+            'Community watch meeting scheduled for Friday - 1 day ago',
+            'Safety tips: Remember to lock your doors - 2 days ago'
+        ];
+
+        const updatesContainer = document.getElementById('updates');
+        updates.forEach(update => {
+            const p = document.createElement('p');
+            p.textContent = update;
+            p.style.padding = '0.5rem 0';
+            p.style.borderBottom = '1px solid #eee';
+            updatesContainer.appendChild(p);
+        });
+    </script>
+</body>
+
+</html>

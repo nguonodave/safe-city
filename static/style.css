@@ -12,10 +12,20 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', sans-serif;
   }
+
+  a {
+    text-decoration: none;
+  }
   
   body {
     background-color: var(--light);
     color: var(--dark);
+  }
+
+  body.home-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
   
   .navbar {
@@ -143,4 +153,76 @@
       margin: 1rem;
       padding: 1rem;
     }
+  }
+
+  .hero {
+    background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9));
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  
+  .mission-statement {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .cta-button {
+    background: var(--accent);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  
+  .cta-button:hover {
+    transform: scale(1.05);
+  }
+  
+  .main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    flex: 1;
+  }
+  
+  .data-visualization {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+  }
+  
+  .updates-feed {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+  }
+  
+  .privacy-notice {
+    text-align: center;
+    padding: 1rem;
+    background: var(--primary);
+    color: white;
+    margin-top: auto;
+  }
+  
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+  }
+  
+  .security-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
   }

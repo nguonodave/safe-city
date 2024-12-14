@@ -6,8 +6,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
-
-	"safecity/vars"
+	"text/template"
 )
 
 // IncidentReport represents a single report
@@ -25,6 +24,8 @@ var (
 	reports  []IncidentReport
 	mutex    sync.Mutex
 	dataFile = "reports.json"
+	AllTemplates *template.Template
+	TemplatesDir = "templates/"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -33,7 +34,8 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vars.AllTemplates.ExecuteTemplate(w, "home.html", nil)
+	// Render the home page template
+	AllTemplates.ExecuteTemplate(w, "home.html", nil)
 }
 
 func emergencyContactsPage(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +44,8 @@ func emergencyContactsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vars.AllTemplates.ExecuteTemplate(w, "emergency.html", nil)
+	// Render the emergency contacts page template
+	AllTemplates.ExecuteTemplate(w, "emergency.html", nil)
 }
 
 // loadReports loads existing reports from the JSON file
@@ -83,7 +86,7 @@ func submitReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vars.AllTemplates.ExecuteTemplate(w, "report.html", nil)
+	AllTemplates.ExecuteTemplate(w, "report.html", nil)
 }
 
 func handleReport(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +129,7 @@ func successReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vars.AllTemplates.ExecuteTemplate(w, "success.html", nil)
+	AllTemplates.ExecuteTemplate(w, "success.html", nil)
 }
 
 func getReports(w http.ResponseWriter, r *http.Request) {
@@ -146,7 +149,12 @@ func main() {
         log.Printf("Error loading reports: %v", err)
     }
 
-	vars.AllTemplates, _ = vars.AllTemplates.ParseGlob(vars.TemplatesDir + "*.html")
+	// Parse all templates from the "templates" directory
+	var err error
+	AllTemplates, err = template.ParseGlob(TemplatesDir + "*.html")
+	if err != nil {
+		log.Fatalf("Error loading templates: %v", err)
+	}
 
 	http.HandleFunc("/", homePage) // Render home page
 	http.HandleFunc("/emergency-contacts", emergencyContactsPage) // Render emergency contacts page
@@ -155,6 +163,7 @@ func main() {
 	http.HandleFunc("/report", handleReport)        // Handle form submissions
 	http.HandleFunc("/reports", getReports)         // Endpoint to fetch reports
 
+	// Serve static files (e.g., CSS, JavaScript)
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static", fs))
 

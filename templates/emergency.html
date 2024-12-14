@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contacts</title>
+    <link rel="stylesheet" href="/static/emergency.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-links">
+            <a href="#">Submit a Report</a>
+            <a href="#">Safety Overview</a>
+            <a href="#">Emergency Contacts</a>
+            <a href="#">Crime Statistics</a>
+        </div>
+        <div class="language-switch">
+            <a href="#">EN</a><a href="#">SW</a>
+        </div>
+    </header>
+
+    <div class="alert">
+        For immediate emergency assistance, dial 999 or 112. These numbers are available 24/7.
+    </div>
+
+    <main class="content">
+        <h1>Emergency Contacts</h1>
+        <div class="cards">
+            <!-- Police Stations -->
+            <div class="card">
+                <h2><span class="icon">&#10004;</span> Police Stations</h2>
+                <p>Central Police Station: <span>+254 20 2222222</span> <button class="copy-btn" onclick="copyText('+254 20 2222222')">Copy</button></p>
+                <p>Traffic Police: <span>+254 20 2222223</span> <button class="copy-btn" onclick="copyText('+254 20 2222223')">Copy</button></p>
+                <p>Criminal Investigation: <span>+254 20 2222224</span> <button class="copy-btn" onclick="copyText('+254 20 2222224')">Copy</button></p>
+            </div>
+
+            <!-- Hospitals -->
+            <div class="card">
+                <h2><span class="icon">&#127973;</span> Hospitals</h2>
+                <p>General Hospital: <span>+254 20 3333333</span> <button class="copy-btn" onclick="copyText('+254 20 3333333')">Copy</button></p>
+                <p>Emergency Room: <span>+254 20 3333334</span> <button class="copy-btn" onclick="copyText('+254 20 3333334')">Copy</button></p>
+                <p>Ambulance Service: <span>+254 20 3333335</span> <button class="copy-btn" onclick="copyText('+254 20 3333335')">Copy</button></p>
+            </div>
+
+            <!-- Fire Department -->
+            <div class="card">
+                <h2><span class="icon">&#128293;</span> Fire Department</h2>
+                <p>Fire Emergency: <span>+254 20 4444444</span> <button class="copy-btn" onclick="copyText('+254 20 4444444')">Copy</button></p>
+                <p>Fire Prevention: <span>+254 20 4444445</span> <button class="copy-btn" onclick="copyText('+254 20 4444445')">Copy</button></p>
+                <p>Rescue Team: <span>+254 20 4444446</span> <button class="copy-btn" onclick="copyText('+254 20 4444446')">Copy</button></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function copyText(contact) {
+            navigator.clipboard.writeText(contact).then(() => {
+                alert(`Copied: ${contact}`);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    </script>
+</body>
+</html>

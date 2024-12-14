@@ -28,7 +28,7 @@ var (
 	TemplatesDir = "templates/"
 )
 
-func handleError(w http.ResponseWriter, r *http.Request, statusCode int) {
+func handleError(w http.ResponseWriter, statusCode int) {
 	var templateName string
 	switch statusCode {
 	case http.StatusNotFound:
@@ -53,7 +53,7 @@ func handleError(w http.ResponseWriter, r *http.Request, statusCode int) {
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	// Render the home page template
@@ -62,7 +62,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func overviewPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	AllTemplates.ExecuteTemplate(w, "overview.html", nil)
@@ -70,7 +70,7 @@ func overviewPage(w http.ResponseWriter, r *http.Request) {
 
 func emergencyContactsPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	AllTemplates.ExecuteTemplate(w, "emergency.html", nil)
@@ -78,7 +78,7 @@ func emergencyContactsPage(w http.ResponseWriter, r *http.Request) {
 
 func submitReport(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	AllTemplates.ExecuteTemplate(w, "report.html", nil)
@@ -86,13 +86,13 @@ func submitReport(w http.ResponseWriter, r *http.Request) {
 
 func handleReport(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 
 	err := r.ParseForm()
 	if err != nil {
-		handleError(w, r, http.StatusBadRequest)
+		handleError(w, http.StatusBadRequest)
 		return
 	}
 
@@ -111,7 +111,7 @@ func handleReport(w http.ResponseWriter, r *http.Request) {
 	mutex.Unlock()
 
 	if saveErr != nil {
-		handleError(w, r, http.StatusInternalServerError)
+		handleError(w, http.StatusInternalServerError)
 		return
 	}
 
@@ -120,7 +120,7 @@ func handleReport(w http.ResponseWriter, r *http.Request) {
 
 func successReport(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	AllTemplates.ExecuteTemplate(w, "success.html", nil)
@@ -154,7 +154,7 @@ func saveReports() error {
 
 func getReports(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		handleError(w, r, http.StatusMethodNotAllowed)
+		handleError(w, http.StatusMethodNotAllowed)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -177,7 +177,7 @@ func main() {
 			homePage(w, r)
 			return
 		}
-		handleError(w, r, http.StatusNotFound)
+		handleError(w, http.StatusNotFound)
 	})
 	http.HandleFunc("/overview", overviewPage)
 	http.HandleFunc("/emergency-contacts", emergencyContactsPage)

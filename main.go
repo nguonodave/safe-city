@@ -38,6 +38,16 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	AllTemplates.ExecuteTemplate(w, "home.html", nil)
 }
 
+func overviewPage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Render the home page template
+	AllTemplates.ExecuteTemplate(w, "overview.html", nil)
+}
+
 func emergencyContactsPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -161,6 +171,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", homePage) // Render home page
+	http.HandleFunc("/overview", overviewPage) // Render overview page
 	http.HandleFunc("/emergency-contacts", emergencyContactsPage) // Render emergency contacts page
 	http.HandleFunc("/submit-report", submitReport) // Render report submission
 	http.HandleFunc("/success", successReport)      // Render success report submission
